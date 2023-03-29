@@ -80,6 +80,7 @@ function App() {
   const [errorState, setErrorState] = useState('');
 
   const loadProducts = async () => {
+    console.log('handle submit')
     try {
       const response = await fetch('https://dummyjson.com/products');
       const result = await response.json();
@@ -96,6 +97,7 @@ function App() {
   },[]);
 
   const handleSubmit = (e) => {
+    console.log('handle submit')
     e.preventDefault();
     if (!searchQuery || searchQuery.length < 3) {
       setCurrentPageData([]);
@@ -105,7 +107,7 @@ function App() {
     else {
       const results = data.filter((item) => {
         const title = item.title.toLowerCase();
-        const query = item.searchQuery.toLowerCase();
+        const query = searchQuery.toLowerCase();
         return title.includes(query);
       })
       if (results.length !== 0) {
@@ -129,7 +131,16 @@ function App() {
       loadProducts();
   }
 
-  console.log(currentPageData);
+  const handleTableHeaderClick = (e) => {
+    let headerText = e.target.textContent === 'Product name' ? 'title' : e.target.textContent.toLowerCase();
+    const tempData = [...currentPageData];
+    tempData.sort((a, b) => {
+      const aValue = a[headerText].toString();
+      const bValue = b[headerText].toString();
+      return bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    setCurrentPageData(tempData);
+  };
 
   return (
     <>
@@ -141,20 +152,16 @@ function App() {
               value={searchQuery}
               onChange={handleSearchInput}
             />
-            <Button>
-              Search
-            </Button>
-            <Button onClick={handleReset}>
-              Reset
-            </Button>
+            <Button type="submit"> Search </Button>
+            <Button type="button" onClick={handleReset}> Reset</Button>
           </Wrapper>
         </StyledForm>
         <Table>
           <thead>
-            <TableRow>
+            <TableRow key={0}>
               {
                 ['Product name', 'Price', 'Category', 'Rating'].map((item) => (
-                  <TableHeader key={item}>
+                  <TableHeader key={item} onClick={handleTableHeaderClick}>
                     {item}
                   </TableHeader>
                 ))
