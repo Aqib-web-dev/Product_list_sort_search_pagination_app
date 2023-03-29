@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+Task Description
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+You need to create a web application that displays a list of products. The application should allow the user to sort, filter, search, and paginate through the list of products. The products should be retrieved from an API that returns an array of JSON objects, each representing a product.
 
-## Available Scripts
+Here are the specific requirements for the application:
 
-In the project directory, you can run:
+The application should display a table of products with columns for the product name, price, category, and date added.
 
-### `yarn start`
+The user should be able to sort the table by clicking on the column headers. The table should display an arrow icon indicating the sort direction (ascending or descending) of the column being sorted.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The user should be able to filter the table by category using a dropdown menu. The dropdown menu should display all unique categories in the list of products.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The user should be able to search for a product by name using a search bar. The search should be case-insensitive and should match any products whose names contain the search query.
 
-### `yarn test`
+The application should display a pagination bar at the bottom of the table that allows the user to navigate between pages. Each page should display a maximum of 10 products.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application should be responsive and work well on mobile devices.
 
-### `yarn build`
+The application should be built using React.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Here are some additional details to help you get started:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You will need to create a component to handle the API call and retrieve the list of products.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+You will need to use the useState hook to store the list of products, the current sort column and direction, the current filter category, and the current search query.
 
-### `yarn eject`
+You will need to use the useEffect hook to make the API call when the component mounts or when the sort, filter, or search criteria change.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+You will need to use conditional rendering to display the table or an error message if the API call fails.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+You will need to use the Array.prototype.sort() method to sort the list of products based on the current sort column and direction.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+You will need to use the Array.prototype.filter() method to filter the list of products based on the current filter category.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You will need to use the Array.prototype.slice() method to paginate the list of products based on the current page number.
 
-## Learn More
+You will need to use CSS or a CSS framework like Bootstrap or Material UI to style the application.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+You can use any other libraries or tools you like, such as Axios for making API calls or Lodash for filtering and sorting arrays.
