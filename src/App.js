@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
+const PAGELIMIT = 5
 const Container = styled.div`
   width: 100%;
   max-width: 1200px;
@@ -78,12 +79,14 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPageData, setCurrentPageData] = useState([]);
   const [errorState, setErrorState] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
 
   const loadProducts = async () => {
-    console.log('handle submit')
     try {
       const response = await fetch('https://dummyjson.com/products');
       const result = await response.json();
+      setTotalPages(Math.ceil(result.products.length/PAGELIMIT));
       setData(result.products);
       setCurrentPageData(result.products);
     }
@@ -96,11 +99,16 @@ function App() {
     loadProducts();
   },[]);
 
+  useEffect(() => {
+    let start = (currentPage - 1) * PAGELIMIT;
+    let end = start + PAGELIMIT;
+    setCurrentPageData(data.slice(start, end));
+  }, [currentPage, data]);
+
   const handleSubmit = (e) => {
-    console.log('handle submit')
     e.preventDefault();
     if (!searchQuery || searchQuery.length < 3) {
-      setCurrentPageData([]);
+      setData([]);
       setErrorState('Search text should be at least 3 characters long'); 
       console.log('handle submit')
     }
@@ -113,6 +121,7 @@ function App() {
       if (results.length !== 0) {
         setCurrentPageData(results);
         setErrorState('');
+        setTotalPages(Math.ceil(results.length / PAGELIMIT));
       }
       else {
         setCurrentPageData([]);
@@ -142,9 +151,12 @@ function App() {
     setCurrentPageData(tempData);
   };
 
+  const handlePageNumber = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  }
+
   return (
-    <>
-      <Container>
+    <Container>
         <StyledForm onSubmit={handleSubmit}>
           <Wrapper>
             <StyledInput
@@ -182,8 +194,16 @@ function App() {
           </tbody>
         </Table>
         {errorState && <p>{errorState}</p>}
-      </Container>
-    </>
+        {!errorState && <Wrapper>
+          {Array.from(Array(totalPages).keys()).map((pageNumber) => 
+            <Button 
+              onClick={() => handlePageNumber(pageNumber + 1)}
+            >
+              {pageNumber + 1}
+            </Button>
+          )}
+        </Wrapper>}
+    </Container>
   );
 }
 
