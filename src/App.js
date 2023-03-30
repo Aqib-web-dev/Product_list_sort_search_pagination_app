@@ -74,6 +74,25 @@ const Wrapper = styled.div`
   margin: ${props => props.isMargin ? '15px': 0};
 `;
 
+const StyledSelect = styled.select`
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+  margin: 18px;
+`;
+
+const StyledOption = styled.option`
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: #fff;
+`;
+
 function App() {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,6 +100,10 @@ function App() {
   const [errorState, setErrorState] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
+  const [currentCategory, setCurrentCategory] = useState("All");
+  const [paginatedData, setPaginatedData] = useState([]);
+
+  const categories = ['smartphones', 'laptops', 'fragrances', 'skincare', 'groceries', 'home-decoration' ];
 
   const loadProducts = async () => {
     try {
@@ -102,8 +125,8 @@ function App() {
   useEffect(() => {
     let start = (currentPage - 1) * PAGELIMIT;
     let end = start + PAGELIMIT;
-    setCurrentPageData(data.slice(start, end));
-  }, [currentPage, data]);
+    setPaginatedData(currentPageData.slice(start, end))
+  }, [currentPage, data, currentPageData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -119,6 +142,7 @@ function App() {
         return title.includes(query);
       })
       if (results.length !== 0) {
+        setPaginatedData(results.slice(0, PAGELIMIT))
         setCurrentPageData(results);
         setErrorState('');
         setTotalPages(Math.ceil(results.length / PAGELIMIT));
@@ -146,7 +170,7 @@ function App() {
     tempData.sort((a, b) => {
       const aValue = a[headerText].toString();
       const bValue = b[headerText].toString();
-      return bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
+      return aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' });
     });
     setCurrentPageData(tempData);
   };
@@ -154,6 +178,16 @@ function App() {
   const handlePageNumber = (pageNumber) => {
     setCurrentPage(pageNumber);
   }
+
+  const handleCategoryChange = (e) => {
+    let value = (e.target.value);
+    setCurrentCategory(value);
+    console.log(value);
+    const filteredProducts = value === "All" ? data  : data.filter(product => product.category === value);
+    setTotalPages(Math.ceil(filteredProducts.length / PAGELIMIT));
+    setPaginatedData(filteredProducts.slice(0, PAGELIMIT));
+    setCurrentPageData(filteredProducts);
+  };
 
   return (
     <Container>
@@ -182,7 +216,7 @@ function App() {
           </thead>
           <tbody>
             {!errorState && (
-              currentPageData.map(({id,title,price, category, rating}) => (
+              paginatedData.map(({id,title,price, category, rating}) => (
               <TableRow key={id}>
                 {Object.values({title,price, category, rating}).map(value =>
                   <TableCell>
@@ -194,7 +228,7 @@ function App() {
           </tbody>
         </Table>
         {errorState && <p>{errorState}</p>}
-        {!errorState && <Wrapper>
+        {!errorState && <Wrapper isMargin>
           {Array.from(Array(totalPages).keys()).map((pageNumber) => 
             <Button 
               onClick={() => handlePageNumber(pageNumber + 1)}
@@ -203,6 +237,19 @@ function App() {
             </Button>
           )}
         </Wrapper>}
+
+        <StyledSelect value={currentCategory} onChange={handleCategoryChange}>
+          <StyledOption value='All'>
+            All
+          </StyledOption>
+          {
+            categories.map((category, index) => 
+              <StyledOption key={index}>
+                {category}
+              </StyledOption>
+            )
+          }
+        </StyledSelect>
     </Container>
   );
 }
